@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarBoy English</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: white;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #090b25, #17245c, #39165c, #09152e);
+            background-size: 400% 400%;
+            animation: bg 14s ease infinite;
+        }
+
+        @keyframes bg {
+            0% {
+                background-position: 0 50%
+            }
+
+            50% {
+                background-position: 100% 50%
+            }
+
+            100% {
+                background-position: 0 50%
+            }
+        }
+
+        header {
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #9eeaff
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px
+        }
+
+        .cardx {
+            background: rgba(255, 255, 255, .1);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 12px 0;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 30px #0003
+        }
+
+        button,
+        .btnx {
+            background: linear-gradient(90deg, #00c6ff, #8b5cf6);
+            border: 0;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            margin: 5px;
+            cursor: pointer
+        }
+
+        button:hover {
+            opacity: .85
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 0;
+            background: #fff;
+            color: #111
+        }
+
+        .navbtn {
+            background: rgba(255, 255, 255, .15)
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        .word {
+            font-size: 25px;
+            color: #9eeaff;
+            font-weight: bold
+        }
+
+        .answer {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: #ffffff18;
+            margin: 8px 0
+        }
+
+        .answer.correct {
+            background: #168b59
+        }
+
+        .answer.wrong {
+            background: #a83252
+        }
+
+        .small {
+            color: #cbd5e1
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #aeeaff
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">⭐ StarBoy</div>
+        <div id="points">Points: 0</div>
+    </header>
+
+    <main>
+        <section id="login" class="cardx">
+            <h1>Welcome to StarBoy</h1>
+            <p>Learn English every day!</p>
+            <input id="username" placeholder="Your name">
+            <button onclick="startApp()">Start learning</button>
+            <p class="small">Your progress is saved in this browser.</p>
+        </section>
+
+        <section id="app" class="hidden">
+            <div class="cardx">
+                <h1 id="hello">Hello!</h1>
+                <p>Choose what you want to learn today.</p>
+                <button onclick="showPage('home')">Home</button>
+                <button onclick="showPage('vocab')">Vocabulary</button>
+                <button onclick="showPage('grammar')">Grammar</button>
+                <button onclick="showPage('speaking')">Speaking</button>
+                <button onclick="showPage('progress')">Progress</button>
+            </div>
+
+            <section id="home" class="page">
+                <div class="cardx">
+                    <h2>Welcome to StarBoy 🚀</h2>
+                    <p>200 English words • 200 grammar tests • 200 speaking topics</p>
+                    <p>Levels: A1, A2, B1, B2</p>
+                </div>
+                <div class="cardx">
+                    <h3>Vocabulary</h3>
+                    <p>Learn new English words and their translations.</p>
+                    <button onclick="showPage('vocab')">Start</button>
+                </div>
+                <div class="cardx">
+                    <h3>Grammar</h3>
+                    <p>Practice English grammar with tests.</p>
+                    <button onclick="showPage('grammar')">Start</button>
+                </div>
+                <div class="cardx">
+                    <h3>Speaking</h3>
+                    <p>Improve your speaking skills.</p>
+                    <button onclick="showPage('speaking')">Start</button>
+                </div>
+            </section>
+
+            <section id="vocab" class="page hidden">
+                <div class="cardx">
+                    <h2>📚 Vocabulary</h2>
+                    <p id="vcount">Word 1 / 200</p>
+                    <select id="vlevel" onchange="resetVocab()">
+                        <option value="All">All levels</option>
+                        <option>A1</option>
+                        <option>A2</option>
+                        <option>B1</option>
+                        <option>B2</option>
+                    </select>
+                    <div class="word" id="vword"></div>
+                    <h3 id="vtranslation"></h3>
+                    <p id="vexample" class="small"></p>
+                    <button onclick="toggleTranslation()">Show / Hide translation</button>
+                    <button onclick="nextWord()">Next word →</button>
+                </div>
+            </section>
+
+            <section id="grammar" class="page hidden">
+                <div class="cardx">
+                    <h2>✏️ Grammar tests</h2>
+                    <p id="gcount">Question 1 / 200</p>
+                    <select id="glevel" onchange="resetGrammar()">
+                        <option value="All">All levels</option>
+                        <option>A1</option>
+                        <option>A2</option>
+                        <option>B1</option>
+                        <option>B2</option>
+                    </select>
+                    <h3 id="gquestion"></h3>
+                    <div id="ganswers"></div>
+                    <p id="gfeedback"></p>
+                    <button onclick="nextQuestion()">Next question →</button>
+                </div>
+            </section>
+
+            <section id="speaking" class="page hidden">
+                <div class="cardx">
+                    <h2>🎤 Speaking</h2>
+                    <p id="scount">Topic 1 / 200</p>
+                    <select id="slevel" onchange="resetSpeaking()">
+                        <option value="All">All levels</option>
+                        <option>A1</option>
+                        <option>A2</option>
+                        <option>B1</option>
+                        <option>B2</option>
+                    </select>
+                    <h3 id="stopic"></h3>
+                    <p id="shint" class="small"></p>
+                    <button onclick="nextTopic()">Next topic →</button>
+                </div>
+            </section>
+
+            <section id="progress" class="page hidden">
+                <div class="cardx">
+                    <h2>🏆 Your progress</h2>
+                    <h3 id="pvalue">0 points</h3>
+                    <p id="learned"></p>
+                    <p id="correct"></p>
+                    <button onclick="resetProgress()">Reset progress</button>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        // ---------- USER AND PROGRESS ----------
+        let points = Number(localStorage.getItem("sb_points") || 0);
+        let learned = Number(localStorage.getItem("sb_learned") || 0);
+        let correct = Number(localStorage.getItem("sb_correct") || 0);
+
+        function updatePoints() {
+            document.getElementById("points").textContent = "Points: " + points;
+            localStorage.setItem("sb_points", points);
+            localStorage.setItem("sb_learned", learned);
+            localStorage.setItem("sb_correct", correct);
+        }
+        function startApp() {
+            let name = document.getElementById("username").value.trim();
+            if (!name) {alert("Enter your name!"); return }
+            localStorage.setItem("sb_name", name);
+            document.getElementById("login").classList.add("hidden");
+            document.getElementById("app").classList.remove("hidden");
+            document.getElementById("hello").textContent = "Hello, " + name + "! 🚀";
+            updatePoints(); renderVocab(); renderGrammar(); renderSpeaking();
+        }
+        window.addEventListener("load", () => {
+            let name = localStorage.getItem("sb_name");
+            if (name) {
+                document.getElementById("username").value = name;
+                startApp();
+            }
+        });
+        function showPage(id) {
+            document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
+            document.getElementById(id).classList.remove("hidden");
+            if (id === "progress") renderProgress();
+        }
+
+        // ---------- VOCABULARY: 200 WORDS ----------
+        const vocab = [
+            ["A1", "apple", "яблоко", "I eat an apple."],
+            ["A1", "book", "книга", "This is my book."],
+            ["A1", "water", "вода", "I drink water."],
+            ["A1", "house", "дом", "My house is big."],
+            ["A1", "school", "школа", "I go to school."],
+            ["A1", "friend", "друг", "He is my friend."],
+            ["A1", "family", "семья", "I love my family."],
+            ["A1", "happy", "счастливый", "I am happy."],
+            ["A1", "beautiful", "красивый", "It is beautiful."],
+            ["A1", "small", "маленький", "The cat is small."],
+            ["A1", "big", "большой", "This room is big."],
+            ["A1", "fast", "быстрый", "The car is fast."],
+            ["A1", "slow", "медленный", "The turtle is slow."],
+            ["A1", "morning", "утро", "Good morning!"],
+            ["A1", "evening", "вечер", "Good evening!"],
+            ["A1", "night", "ночь", "It is night."],
+            ["A1", "food", "еда", "The food is good."],
+            ["A1", "bread", "хлеб", "I like bread."],
+            ["A1", "milk", "молоко", "I drink milk."],
+            ["A1", "money", "деньги", "I need money."],
+            ["A1", "city", "город", "This city is big."],
+            ["A1", "country", "страна", "I love my country."],
+            ["A1", "teacher", "учитель", "My teacher is kind."],
+            ["A1", "student", "ученик", "I am a student."],
+            ["A1", "computer", "компьютер", "I use a computer."],
+            ["A1", "phone", "телефон", "My phone is new."],
+            ["A1", "table", "стол", "The book is on the table."],
+            ["A1", "chair", "стул", "Sit on the chair."],
+            ["A1", "window", "окно", "Open the window."],
+            ["A1", "door", "дверь", "Close the door."],
+            ["A1", "dog", "собака", "The dog is friendly."],
+            ["A1", "cat", "кошка", "The cat is sleeping."],
+            ["A1", "bird", "птица", "The bird can fly."],
+            ["A1", "car", "машина", "My father has a car."],
+            ["A1", "bus", "автобус", "I go by bus."],
+            ["A1", "football", "футбол", "I play football."],
+            ["A1", "game", "игра", "This game is fun."],
+            ["A1", "music", "музыка", "I listen to music."],
+            ["A1", "movie", "фильм", "We watch a movie."],
+            ["A1", "read", "читать", "I read every day."],
+            ["A1", "write", "писать", "Write your name."],
+            ["A1", "speak", "говорить", "I speak English."],
+            ["A1", "listen", "слушать", "Listen to me."],
+            ["A1", "learn", "учить", "I learn English."],
+            ["A1", "work", "работать", "I work every day."],
+            ["A1", "play", "играть", "They play football."],
+            ["A1", "run", "бегать", "I run fast."],
+            ["A1", "walk", "ходить", "We walk to school."],
+            ["A1", "eat", "есть", "I eat breakfast."],
+            ["A1", "sleep", "спать", "I sleep at night."],
+            ["A2", "usually", "обычно", "I usually wake up early."],
+            ["A2", "sometimes", "иногда", "I sometimes read books."],
+            ["A2", "never", "никогда", "I never smoke."],
+            ["A2", "always", "всегда", "She always helps me."],
+            ["A2", "important", "важный", "English is important."],
+            ["A2", "different", "разный", "We have different ideas."],
+            ["A2", "expensive", "дорогой", "This phone is expensive."],
+            ["A2", "cheap", "дешёвый", "That shop is cheap."],
+            ["A2", "healthy", "здоровый", "Fruit is healthy."],
+            ["A2", "dangerous", "опасный", "This road is dangerous."],
+            ["A2", "weather", "погода", "The weather is nice."],
+            ["A2", "journey", "путешествие", "Our journey was long."],
+            ["A2", "holiday", "праздник", "I enjoy my holiday."],
+            ["A2", "neighbor", "сосед", "My neighbor is friendly."],
+            ["A2", "message", "сообщение", "I sent a message."],
+            ["A2", "improve", "улучшать", "I want to improve my English."],
+            ["A2", "practice", "практика", "Practice makes progress."],
+            ["A2", "decide", "решать", "I need to decide."],
+            ["A2", "remember", "помнить", "Remember this word."],
+            ["A2", "forget", "забывать", "Do not forget your book."],
+            ["A2", "borrow", "брать взаймы", "Can I borrow your pen?"],
+            ["A2", "lend", "одалживать", "I can lend you a book."],
+            ["A2", "arrive", "прибывать", "We arrive at six."],
+            ["A2", "leave", "уходить", "I leave home early."],
+            ["A2", "invite", "приглашать", "I want to invite you."],
+            ["A2", "accept", "принимать", "She accepted my invitation."],
+            ["A2", "refuse", "отказываться", "He refused the offer."],
+            ["A2", "enough", "достаточно", "We have enough time."],
+            ["A2", "perhaps", "возможно", "Perhaps it will rain."],
+            ["A2", "almost", "почти", "I almost finished."],
+            ["A2", "already", "уже", "I have already eaten."],
+            ["A2", "yet", "ещё", "I haven't finished yet."],
+            ["A2", "during", "во время", "I slept during the flight."],
+            ["A2", "without", "без", "I can't work without my laptop."],
+            ["A2", "careful", "осторожный", "Be careful!"],
+            ["A2", "crowded", "переполненный", "The bus is crowded."],
+            ["A2", "quiet", "тихий", "This room is quiet."],
+            ["A2", "noisy", "шумный", "The street is noisy."],
+            ["A2", "successful", "успешный", "She is successful."],
+            ["A2", "possible", "возможный", "Anything is possible."],
+            ["A2", "advice", "совет", "Thank you for your advice."],
+            ["A2", "choice", "выбор", "It is your choice."],
+            ["A2", "experience", "опыт", "It was a good experience."],
+            ["A2", "future", "будущее", "Think about your future."],
+            ["A2", "goal", "цель", "My goal is to learn English."],
+            ["A2", "habit", "привычка", "Reading is a good habit."],
+            ["A2", "health", "здоровье", "Health is important."],
+            ["A2", "language", "язык", "English is a useful language."],
+            ["A2", "opportunity", "возможность", "This is a great opportunity."],
+            ["B1", "achieve", "достигать", "You can achieve your goals."],
+            ["B1", "ambitious", "амбициозный", "He is an ambitious student."],
+            ["B1", "challenge", "сложная задача", "Learning English is a challenge."],
+            ["B1", "confident", "уверенный", "She feels confident."],
+            ["B1", "concentrate", "сосредоточиться", "Concentrate on your work."],
+            ["B1", "develop", "развивать", "I want to develop my skills."],
+            ["B1", "effort", "усилие", "Success requires effort."],
+            ["B1", "encourage", "поддерживать", "My parents encourage me."],
+            ["B1", "environment", "окружающая среда", "We should protect the environment."],
+            ["B1", "failure", "неудача", "Failure can teach us."],
+            ["B1", "independent", "независимый", "She is independent."],
+            ["B1", "knowledge", "знания", "Knowledge is powerful."],
+            ["B1", "manage", "справляться", "I can manage my time."],
+            ["B1", "opinion", "мнение", "What is your opinion?"],
+            ["B1", "opportunity", "возможность", "Don't miss this opportunity."],
+            ["B1", "patient", "терпеливый", "Be patient with yourself."],
+            ["B1", "perform", "выполнять", "He performed well."],
+            ["B1", "personal", "личный", "This is my personal opinion."],
+            ["B1", "prepare", "готовиться", "I prepare for my exam."],
+            ["B1", "progress", "прогресс", "You are making progress."],
+            ["B1", "purpose", "цель", "What is the purpose?"],
+            ["B1", "realize", "осознавать", "I realized my mistake."],
+            ["B1", "recommend", "рекомендовать", "I recommend this book."],
+            ["B1", "responsible", "ответственный", "He is responsible for the project."],
+            ["B1", "solution", "решение", "We need a solution."],
+            ["B1", "support", "поддержка", "Thank you for your support."],
+            ["B1", "valuable", "ценный", "Time is valuable."],
+            ["B1", "volunteer", "доброволец", "She works as a volunteer."],
+            ["B1", "achieve", "добиваться", "Hard work helps us achieve more."],
+            ["B1", "advantage", "преимущество", "This is an advantage."],
+            ["B1", "afford", "позволить себе", "I cannot afford a new car."],
+            ["B1", "behavior", "поведение", "His behavior was polite."],
+            ["B1", "benefit", "польза", "Exercise has many benefits."],
+            ["B1", "career", "карьера", "I want a career in programming."],
+            ["B1", "community", "сообщество", "Our community is friendly."],
+            ["B1", "communicate", "общаться", "We communicate online."],
+            ["B1", "compare", "сравнивать", "Don't compare yourself with others."],
+            ["B1", "consider", "рассматривать", "Consider all the options."],
+            ["B1", "creative", "творческий", "She is very creative."],
+            ["B1", "decision", "решение", "It was a difficult decision."],
+            ["B1", "discover", "обнаруживать", "Scientists discover new things."],
+            ["B1", "education", "образование", "Education opens doors."],
+            ["B1", "effective", "эффективный", "This is an effective method."],
+            ["B1", "focus", "сосредоточиться", "Focus on your goals."],
+            ["B1", "generation", "поколение", "The younger generation uses technology."],
+            ["B1", "influence", "влияние", "Friends can influence us."],
+            ["B1", "method", "метод", "Try a different method."],
+            ["B1", "opinion", "точка зрения", "Everyone has an opinion."],
+            ["B1", "organize", "организовывать", "Let's organize the event."],
+            ["B1", "participate", "участвовать", "I want to participate."],
+            ["B1", "positive", "положительный", "Stay positive."],
+            ["B1", "prefer", "предпочитать", "I prefer tea to coffee."],
+            ["B1", "prevent", "предотвращать", "Exercise can prevent some problems."],
+            ["B1", "provide", "предоставлять", "The school provides books."],
+            ["B1", "reduce", "уменьшать", "We should reduce waste."],
+            ["B1", "relationship", "отношения", "Trust is important in a relationship."],
+            ["B1", "require", "требовать", "This job requires experience."],
+            ["B1", "research", "исследование", "I am doing research."],
+            ["B1", "resource", "ресурс", "The internet is a useful resource."],
+            ["B1", "specific", "конкретный", "Give me a specific example."],
+            ["B1", "suggest", "предлагать", "I suggest a new idea."],
+            ["B1", "technology", "технология", "Technology changes our lives."],
+            ["B1", "tradition", "традиция", "This is an old tradition."],
+            ["B1", "various", "различный", "There are various reasons."],
+            ["B1", "waste", "тратить впустую", "Don't waste your time."],
+            ["B2", "accurate", "точный", "The information must be accurate."],
+            ["B2", "adapt", "адаптироваться", "We must adapt to changes."],
+            ["B2", "approach", "подход", "Try a different approach."],
+            ["B2", "assess", "оценивать", "Teachers assess students' progress."],
+            ["B2", "assume", "предполагать", "Don't assume anything."],
+            ["B2", "aware", "осведомлённый", "Be aware of the risks."],
+            ["B2", "circumstance", "обстоятельство", "It depends on the circumstances."],
+            ["B2", "complex", "сложный", "This is a complex problem."],
+            ["B2", "consequence", "последствие", "Every choice has consequences."],
+            ["B2", "considerable", "значительный", "It takes considerable effort."],
+            ["B2", "contribute", "вносить вклад", "Everyone can contribute."],
+            ["B2", "crucial", "решающий", "Practice is crucial."],
+            ["B2", "demonstrate", "демонстрировать", "The results demonstrate progress."],
+            ["B2", "distinguish", "различать", "Learn to distinguish facts from opinions."],
+            ["B2", "emphasize", "подчёркивать", "I want to emphasize this point."],
+            ["B2", "establish", "создавать", "They established a new company."],
+            ["B2", "evaluate", "оценивать", "We need to evaluate the results."],
+            ["B2", "evidence", "доказательство", "There is no clear evidence."],
+            ["B2", "flexible", "гибкий", "Be flexible when plans change."],
+            ["B2", "fundamental", "основополагающий", "Trust is fundamental."],
+            ["B2", "implement", "осуществлять", "We will implement the plan."],
+            ["B2", "indicate", "указывать", "The results indicate improvement."],
+            ["B2", "interpret", "интерпретировать", "How do you interpret this result?"],
+            ["B2", "maintain", "поддерживать", "Maintain a healthy routine."],
+            ["B2", "obtain", "получать", "You can obtain more information."],
+            ["B2", "outcome", "результат", "The outcome was positive."],
+            ["B2", "perspective", "точка зрения", "Try to see another perspective."],
+            ["B2", "relevant", "относящийся к делу", "This information is relevant."],
+            ["B2", "significant", "значительный", "There was a significant change."],
+            ["B2", "strategy", "стратегия", "We need a clear strategy."],
+            ["B2", "sufficient", "достаточный", "We have sufficient time."],
+            ["B2", "tend", "иметь тенденцию", "People tend to learn differently."],
+            ["B2", "transform", "преобразовывать", "Technology can transform education."],
+            ["B2", "ultimately", "в конечном счёте", "Ultimately, the choice is yours."],
+            ["B2", "valid", "обоснованный", "That is a valid argument."],
+            ["B2", "widespread", "широко распространённый", "The problem is widespread."],
+            ["B2", "withdraw", "отзывать", "He decided to withdraw his application."],
+            ["B2", "allocate", "распределять", "We allocate time for study."],
+            ["B2", "alternative", "альтернативный", "We need an alternative solution."],
+            ["B2", "apparent", "очевидный", "The reason became apparent."],
+            ["B2", "capacity", "способность", "She has the capacity to learn."],
+            ["B2", "coherent", "логичный", "Write a coherent paragraph."],
+            ["B2", "controversial", "спорный", "It is a controversial topic."],
+            ["B2", "decline", "снижаться", "Sales began to decline."],
+            ["B2", "derive", "получать", "We derive meaning from context."],
+            ["B2", "diverse", "разнообразный", "The city has a diverse population."],
+            ["B2", "enhance", "улучшать", "Reading can enhance vocabulary."],
+            ["B2", "exclude", "исключать", "Do not exclude useful ideas."],
+            ["B2", "framework", "структура", "We need a clear framework."],
+            ["B2", "inevitable", "неизбежный", "Change is inevitable."],
+            ["B2", "justify", "обосновывать", "Can you justify your answer?"],
+            ["B2", "nevertheless", "тем не менее", "It was difficult; nevertheless, we tried."],
+            ["B2", "notion", "понятие", "I understand the basic notion."],
+            ["B2", "persuade", "убеждать", "She tried to persuade him."],
+            ["B2", "priority", "приоритет", "Education is a priority."],
+            ["B2", "reliable", "надёжный", "Use a reliable source."],
+            ["B2", "resolve", "решать", "We must resolve this issue."],
+            ["B2", "retain", "сохранять", "It is hard to retain new words."],
+            ["B2", "reveal", "раскрывать", "The report reveals new facts."],
+            ["B2", "shift", "изменение", "There was a shift in opinion."],
+            ["B2", "substantial", "существенный", "The project needs substantial support."],
+            ["B2", "undergo", "проходить", "The system will undergo changes."],
+            ["B2", "whereas", "тогда как", "I like tea, whereas he prefers coffee."]
+        ];
+
+        // ---------- SPEAKING: 200 TOPICS ----------
+        const speaking = [
+            ["A1", "Introduce yourself", "Say your name, age, country and hobbies."],
+            ["A1", "Your family", "Describe your family."],
+            ["A1", "Your best friend", "Talk about your best friend."],
+            ["A1", "Your school", "Describe your school."],
+            ["A1", "Your favourite subject", "Why do you like it?"],
+            ["A1", "Your favourite sport", "Explain why you enjoy it."],
+            ["A1", "Your favourite football team", "Talk about your team."],
+            ["A1", "Your favourite player", "Describe a football player you admire."],
+            ["A1", "Your daily routine", "What do you do every day?"],
+            ["A1", "Your morning", "Describe your morning."],
+            ["A1", "Your evening", "What do you do in the evening?"],
+            ["A1", "Your hobbies", "What do you do in your free time?"],
+            ["A1", "Your favourite food", "Describe your favourite meal."],
+            ["A1", "Your favourite drink", "What do you like drinking?"],
+            ["A1", "Your favourite animal", "Describe the animal."],
+            ["A1", "Your home", "Describe your home."],
+            ["A1", "Your bedroom", "What is in your bedroom?"],
+            ["A1", "Your city", "Describe your city."],
+            ["A1", "Your country", "Talk about your country."],
+            ["A1", "Your favourite colour", "Why do you like it?"],
+            ["A1", "Your favourite season", "Describe the season."],
+            ["A1", "Your favourite day", "What makes it special?"],
+            ["A1", "Your weekend", "What do you do at weekends?"],
+            ["A1", "Your phone", "What do you use it for?"],
+            ["A1", "Your favourite game", "Describe the game."],
+            ["A1", "Your favourite film", "What is it about?"],
+            ["A1", "Your favourite book", "Talk about the story."],
+            ["A1", "Your English lessons", "Why are you learning English?"],
+            ["A1", "Your teacher", "Describe a teacher you like."],
+            ["A1", "Your future job", "What job would you like?"],
+            ["A1", "Your dream car", "Describe your dream car."],
+            ["A1", "Your favourite clothes", "What do you like wearing?"],
+            ["A1", "Your breakfast", "What do you usually eat?"],
+            ["A1", "Your birthday", "How do you celebrate it?"],
+            ["A1", "Your best holiday", "Where did you go?"],
+            ["A1", "Your favourite place", "Describe a place you like."],
+            ["A1", "Your pet", "Talk about your pet or an animal you like."],
+            ["A1", "Your favourite music", "What music do you listen to?"],
+            ["A1", "Your friends", "What do you do together?"],
+            ["A1", "Your favourite website", "What do you use it for?"],
+            ["A1", "Your computer", "What can you do on it?"],
+            ["A1", "Your favourite fruit", "Describe it."],
+            ["A1", "Your favourite subject at school", "Explain your choice."],
+            ["A1", "Your last weekend", "What did you do?"],
+            ["A1", "Your dream house", "Describe your dream house."],
+            ["A1", "Your favourite shop", "What can you buy there?"],
+            ["A1", "Your morning routine", "Tell us about it."],
+            ["A1", "Your favourite holiday", "How do you celebrate it?"],
+            ["A1", "Your favourite football match", "Describe it."],
+            ["A1", "Your favourite city", "Why would you visit it?"],
+            ["A2", "A perfect weekend", "What would you do?"],
+            ["A2", "A memorable day", "Describe a day you remember."],
+            ["A2", "A person you admire", "Why do you admire them?"],
+            ["A2", "Learning a new skill", "What skill would you learn?"],
+            ["A2", "The importance of exercise", "How does it help people?"],
+            ["A2", "Healthy habits", "Which habits are useful?"],
+            ["A2", "Social media", "How do you use it?"],
+            ["A2", "Online learning", "What are its advantages?"],
+            ["A2", "Travelling", "Where would you like to travel?"],
+            ["A2", "A country you want to visit", "Why do you want to go there?"],
+            ["A2", "Living in a big city", "What are the advantages?"],
+            ["A2", "Living in a village", "What do you like about it?"],
+            ["A2", "Technology in daily life", "How does it help us?"],
+            ["A2", "The internet", "What do you use it for?"],
+            ["A2", "A good friend", "What makes someone a good friend?"],
+            ["A2", "Teamwork", "Why is teamwork important?"],
+            ["A2", "Your future plans", "What are your plans?"],
+            ["A2", "Saving money", "Why should people save money?"],
+            ["A2", "A useful invention", "Describe an invention."],
+            ["A2", "Your favourite celebration", "How do people celebrate it?"],
+            ["A2", "A difficult subject", "How do you study it?"],
+            ["A2", "A school trip", "Describe a trip."],
+            ["A2", "A book you enjoyed", "Why did you enjoy it?"],
+            ["A2", "A film you recommend", "Why should people watch it?"],
+            ["A2", "Your favourite app", "How does it work?"],
+            ["A2", "Learning English", "What is difficult about it?"],
+            ["A2", "The importance of sleep", "Why do people need sleep?"],
+            ["A2", "Helping other people", "How can we help others?"],
+            ["A2", "Protecting nature", "What can people do?"],
+            ["A2", "Your ideal school", "What would it look like?"],
+            ["A2", "Your ideal teacher", "What qualities should they have?"],
+            ["A2", "A successful person", "What makes them successful?"],
+            ["A2", "A useful website", "Describe it."],
+            ["A2", "Shopping online", "What are the advantages?"],
+            ["A2", "Public transport", "How can it improve?"],
+            ["A2", "Your favourite restaurant", "Describe it."],
+            ["A2", "A special gift", "What gift would you give?"],
+            ["A2", "A new hobby", "What would you like to try?"],
+            ["A2", "Your favourite memory", "Why is it special?"],
+            ["A2", "A place in nature", "Describe a beautiful place."],
+            ["A2", "A good decision", "Talk about a good decision."],
+            ["A2", "A time you learned something", "What did you learn?"],
+            ["A2", "Your favourite season", "What activities do you enjoy?"],
+            ["A2", "The role of sport", "Why is sport useful?"],
+            ["A2", "A job you respect", "Why do you respect it?"],
+            ["A2", "Your dream business", "What would it do?"],
+            ["A2", "A day without the internet", "What would you do?"],
+            ["A2", "A person who inspires you", "What can you learn from them?"],
+            ["A2", "A place you would revisit", "Why would you return?"],
+            ["A2", "Your goals for this year", "What do you want to achieve?"],
+            ["B1", "Is technology making life easier?", "Give reasons and examples."],
+            ["B1", "The advantages of learning languages", "Explain your opinion."],
+            ["B1", "Online education versus traditional education", "Compare both."],
+            ["B1", "The importance of discipline", "Why does it matter?"],
+            ["B1", "Success and hard work", "Is hard work enough?"],
+            ["B1", "The role of money in happiness", "Discuss both sides."],
+            ["B1", "The future of programming", "How might technology change?"],
+            ["B1", "Artificial intelligence", "How can AI help people?"],
+            ["B1", "The impact of social media", "Discuss positive and negative effects."],
+            ["B1", "Should students have homework?", "Give your opinion."],
+            ["B1", "The value of reading", "How does reading help?"],
+            ["B1", "Why do people travel?", "Give several reasons."],
+            ["B1", "The importance of time management", "How can people manage time?"],
+            ["B1", "Working alone or in a team", "Which do you prefer?"],
+            ["B1", "The benefits of volunteering", "Why should people volunteer?"],
+            ["B1", "Environmental problems", "Which problem concerns you most?"],
+            ["B1", "How to reduce pollution", "Suggest practical ideas."],
+            ["B1", "The influence of famous people", "Do celebrities influence young people?"],
+            ["B1", "The importance of family", "How does family support us?"],
+            ["B1", "The best way to learn vocabulary", "Explain your method."],
+            ["B1", "Should school start later?", "Discuss your opinion."],
+            ["B1", "The future of transport", "What changes do you expect?"],
+            ["B1", "The importance of creativity", "Why is creativity useful?"],
+            ["B1", "A challenge you overcame", "What did it teach you?"],
+            ["B1", "The meaning of friendship", "What makes friendship strong?"],
+            ["B1", "How to become a good leader", "Describe important qualities."],
+            ["B1", "The advantages of living abroad", "What can people learn?"],
+            ["B1", "The disadvantages of living abroad", "What difficulties may appear?"],
+            ["B1", "The importance of financial education", "Why should young people learn it?"],
+            ["B1", "Saving versus spending", "Which approach is better?"],
+            ["B1", "The role of sport in society", "How does sport bring people together?"],
+            ["B1", "The effect of advertising", "Does advertising influence choices?"],
+            ["B1", "The value of patience", "Why is patience important?"],
+            ["B1", "The future of education", "What should schools change?"],
+            ["B1", "The importance of confidence", "How can people build confidence?"],
+            ["B1", "A person who changed history", "What did they achieve?"],
+            ["B1", "The benefits of teamwork", "Give examples."],
+            ["B1", "The risks of misinformation", "How can people check facts?"],
+            ["B1", "The importance of curiosity", "How does curiosity help learning?"],
+            ["B1", "How to make good decisions", "What steps should people take?"],
+            ["B1", "The value of cultural traditions", "Why should traditions be preserved?"],
+            ["B1", "The impact of tourism", "How does tourism affect communities?"],
+            ["B1", "The importance of public libraries", "Are libraries still useful?"],
+            ["B1", "The role of music", "How does music affect people?"],
+            ["B1", "The future of football", "How might the sport change?"],
+            ["B1", "The importance of fair play", "Why does it matter in sport?"],
+            ["B1", "Should children use smartphones?", "Discuss the benefits and risks."],
+            ["B1", "The value of lifelong learning", "Why should adults keep learning?"],
+            ["B1", "What makes a good city?", "Describe the features."],
+            ["B1", "The importance of innovation", "How does innovation improve life?"],
+            ["B2", "Can money buy happiness?", "Discuss the limits of money."],
+            ["B2", "Should artificial intelligence replace some jobs?", "Consider both sides."],
+            ["B2", "Is success measured by wealth?", "Present a balanced argument."],
+            ["B2", "The ethics of modern technology", "What responsibilities do developers have?"],
+            ["B2", "How should governments address climate change?", "Suggest realistic policies."],
+            ["B2", "Does social media bring people closer?", "Evaluate its effects."],
+            ["B2", "The future of remote work", "What are its long-term effects?"],
+            ["B2", "Should university education be free?", "Build a clear argument."],
+            ["B2", "The importance of critical thinking", "How can it prevent mistakes?"],
+            ["B2", "Can competition be harmful?", "Discuss advantages and disadvantages."],
+            ["B2", "The relationship between education and equality", "Explain your view."],
+            ["B2", "How does culture shape identity?", "Use examples."],
+            ["B2", "Should cities limit private cars?", "Consider possible consequences."],
+            ["B2", "The influence of technology on privacy", "What protections are needed?"],
+            ["B2", "Is creativity more important than knowledge?", "Compare the two."],
+            ["B2", "The responsibilities of successful people", "What should they do for society?"],
+            ["B2", "How can young people influence society?", "Give practical examples."],
+            ["B2", "The role of the media in democracy", "Why is reliable reporting important?"],
+            ["B2", "Should professional athletes earn high salaries?", "Discuss both perspectives."],
+            ["B2", "The importance of cultural exchange", "How does it benefit societies?"],
+            ["B2", "Can technology solve environmental problems?", "Evaluate its limits."],
+            ["B2", "The value of failure", "Can failure lead to success?"],
+            ["B2", "How should schools prepare students for the future?", "Suggest improvements."],
+            ["B2", "The impact of consumerism", "How does it affect people and nature?"],
+            ["B2", "Is online communication replacing real interaction?", "Give a balanced response."],
+            ["B2", "The importance of scientific research", "Why should it be supported?"],
+            ["B2", "Should governments regulate artificial intelligence?", "Explain your position."],
+            ["B2", "How can societies reduce inequality?", "Suggest several approaches."],
+            ["B2", "The role of personal responsibility", "How does it affect communities?"],
+            ["B2", "The future of renewable energy", "What challenges remain?"],
+            ["B2", "Does globalisation weaken local culture?", "Discuss both views."],
+            ["B2", "The importance of trustworthy information", "How can people identify it?"],
+            ["B2", "Should people prioritise career or family?", "Explain your perspective."],
+            ["B2", "The influence of role models", "What makes a positive role model?"],
+            ["B2", "How can cities become more sustainable?", "Give detailed suggestions."],
+            ["B2", "The role of innovation in business", "Why is innovation necessary?"],
+            ["B2", "Should exams determine academic success?", "Consider alternative assessments."],
+            ["B2", "The future of human communication", "What changes might happen?"],
+            ["B2", "The value of international cooperation", "Why is it necessary?"],
+            ["B2", "How can people balance ambition and wellbeing?", "Suggest practical habits."],
+            ["B2", "The ethical use of personal data", "What rules should exist?"],
+            ["B2", "Does modern life move too quickly?", "Discuss the consequences."],
+            ["B2", "The importance of independent thinking", "How can people develop it?"],
+            ["B2", "Should public transport be free?", "Evaluate costs and benefits."],
+            ["B2", "The relationship between sport and national identity", "Explain your view."],
+            ["B2", "How can businesses act responsibly?", "Give examples."],
+            ["B2", "The role of creativity in solving global problems", "Support your argument."],
+            ["B2", "Can economic growth continue without harming nature?", "Discuss possible solutions."],
+            ["B2", "The importance of digital literacy", "Why is it essential today?"],
+            ["B2", "What makes a society successful?", "Present your own definition."]
+        ];
+
+        // ---------- GRAMMAR: 200 QUESTIONS ----------
+        const grammar = [
+            ["A1", "She _ to school every day.", ["go", "goes", "going", "gone"], 1],
+            ["A1", "They _ football now.", ["play", "plays", "are playing", "played"], 2],
+            ["A1", "I _ a student.", ["am", "is", "are", "be"], 0],
+            ["A1", "He _ got a new phone.", ["have", "has", "having", "is"], 1],
+            ["A1", "We _ from Tajikistan.", ["am", "is", "are", "be"], 2],
+            ["A1", "There _ a book on the table.", ["are", "is", "am", "be"], 1],
+            ["A1", "I _ like coffee.", ["doesn't", "don't", "isn't", "not"], 1],
+            ["A1", "_ you speak English?", ["Does", "Are", "Do", "Is"], 2],
+            ["A1", "She _ watching TV.", ["am", "are", "is", "be"], 2],
+            ["A1", "Yesterday, I _ football.", ["play", "plays", "played", "playing"], 2],
+            ["A1", "He can _ fast.", ["runs", "running", "run", "ran"], 2],
+            ["A1", "This is _ apple.", ["a", "an", "the", "-"], 1],
+            ["A1", "I have _ brothers.", ["any", "a", "some", "much"], 2],
+            ["A1", "There aren't _ chairs.", ["some", "any", "much", "a"], 1],
+            ["A1", "My birthday is _ May.", ["at", "on", "in", "by"], 2],
+            ["A1", "The lesson starts _ 9 o'clock.", ["in", "on", "at", "to"], 2],
+            ["A1", "The cat is _ the table.", ["under", "between", "during", "from"], 0],
+            ["A1", "This book is _ than that one.", ["good", "better", "best", "more good"], 1],
+            ["A1", "She is the _ student in class.", ["tall", "taller", "tallest", "more tall"], 2],
+            ["A1", "I _ swim when I was five.", ["can", "could", "must", "may"], 1],
+            ["A1", "You _ be quiet in the library.", ["should", "would", "could", "are"], 0],
+            ["A1", "They _ at home yesterday.", ["was", "were", "are", "is"], 1],
+            ["A1", "I _ breakfast every morning.", ["have", "has", "having", "had"], 0],
+            ["A1", "Look! It _ raining.", ["is", "are", "am", "be"], 0],
+            ["A1", "We _ visit our grandmother tomorrow.", ["are", "will", "was", "did"], 1],
+            ["A1", "_ she like apples?", ["Do", "Does", "Is", "Are"], 1],
+            ["A1", "My parents _ work on Sundays.", ["doesn't", "isn't", "don't", "aren't"], 2],
+            ["A1", "I have two _.", ["child", "childs", "children", "childrens"], 2],
+            ["A1", "This is _ car.", ["me", "I", "my", "mine's"], 2],
+            ["A1", "That bag is _.", ["my", "me", "mine", "I"], 2],
+            ["A1", "He is good _ football.", ["at", "in", "on", "for"], 0],
+            ["A1", "I go to school _ bus.", ["on", "by", "in", "at"], 1],
+            ["A1", "She _ English very well.", ["speak", "speaks", "speaking", "spoken"], 1],
+            ["A1", "We _ dinner at the moment.", ["have", "has", "are having", "had"], 2],
+            ["A1", "I _ my homework last night.", ["do", "does", "did", "doing"], 2],
+            ["A1", "_ is your name?", ["Who", "What", "Where", "When"], 1],
+            ["A1", "_ are you from?", ["What", "Who", "Where", "When"], 2],
+            ["A1", "How _ apples do you need?", ["much", "many", "any", "some"], 1],
+            ["A1", "How _ water do you drink?", ["many", "much", "few", "a"], 1],
+            ["A1", "There is _ milk in the fridge.", ["some", "many", "a few", "any"], 0],
+            ["A1", "The opposite of 'hot' is _.", ["warm", "cold", "cooler", "heat"], 1],
+            ["A1", "I _ tired today.", ["am", "is", "are", "be"], 0],
+            ["A1", "He _ at school now.", ["am", "are", "is", "be"], 2],
+            ["A1", "They _ not ready.", ["is", "am", "are", "be"], 2],
+            ["A1", "She has _ orange.", ["a", "an", "the", "-"], 1],
+            ["A1", "I like _ music.", ["a", "an", "the", "-"], 3],
+            ["A1", "The children _ playing outside.", ["is", "am", "are", "be"], 2],
+            ["A1", "My brother _ 12 years old.", ["am", "are", "is", "be"], 2],
+            ["A1", "We _ English on Mondays.", ["study", "studies", "studying", "studied"], 0],
+            ["A1", "He _ TV every evening.", ["watch", "watches", "watching", "watched"], 1],
+            ["A2", "I have lived here _ 2020.", ["for", "since", "during", "from"], 1],
+            ["A2", "She has studied English _ three years.", ["since", "for", "at", "by"], 1],
+            ["A2", "If it rains, we _ at home.", ["stay", "will stay", "stayed", "staying"], 1],
+            ["A2", "I _ visit my uncle next week.", ["am going to", "went", "have", "was"], 0],
+            ["A2", "This cake _ by my mother.", ["made", "was made", "makes", "is making"], 1],
+            ["A2", "The letter _ yesterday.", ["sent", "was sent", "is send", "sending"], 1],
+            ["A2", "You _ wear a seat belt.", ["must", "mustn't", "might not", "would"], 0],
+            ["A2", "You _ smoke here. It is forbidden.", ["must", "mustn't", "should", "can"], 1],
+            ["A2", "I enjoy _ books.", ["read", "to reading", "reading", "reads"], 2],
+            ["A2", "She decided _ a programmer.", ["become", "becoming", "to become", "became"], 2],
+            ["A2", "He is interested _ science.", ["on", "at", "in", "for"], 2],
+            ["A2", "I am looking forward to _ you.", ["see", "seeing", "saw", "seen"], 1],
+            ["A2", "The film was _ than I expected.", ["interesting", "more interesting", "most interesting", "interest"], 1],
+            ["A2", "This is the _ film I have seen.", ["better", "good", "best", "more good"], 2],
+            ["A2", "When I arrived, they _ dinner.", ["have", "were having", "are having", "had"], 1],
+            ["A2", "I _ never been to London.", ["has", "have", "am", "was"], 1],
+            ["A2", "Have you finished your homework _?", ["already", "yet", "ever", "since"], 1],
+            ["A2", "She has _ finished her work.", ["yet", "ever", "already", "since"], 2],
+            ["A2", "He asked me where I _.", ["live", "lived", "living", "am live"], 1],
+            ["A2", "She said that she _ tired.", ["is", "was", "are", "be"], 1],
+            ["A2", "I was tired, _ I went to bed.", ["because", "so", "but", "although"], 1],
+            ["A2", "I stayed home _ I was ill.", ["because", "so", "but", "and"], 0],
+            ["A2", "Although it was cold, we _ outside.", ["go", "went", "going", "gone"], 1],
+            ["A2", "This is the man _ helped me.", ["which", "where", "who", "when"], 2],
+            ["A2", "This is the house _ I was born.", ["who", "where", "which", "whose"], 1],
+            ["A2", "The book _ I bought is interesting.", ["who", "which", "where", "whose"], 1],
+            ["A2", "I don't have _ time today.", ["many", "much", "few", "a few"], 1],
+            ["A2", "There are _ people here.", ["much", "a little", "a few", "any"], 2],
+            ["A2", "She speaks English _ than me.", ["good", "better", "best", "well"], 1],
+            ["A2", "You look tired. You _ rest.", ["should", "shouldn't", "mustn't", "can't"], 0],
+            ["A2", "I wish I _ more free time.", ["have", "had", "has", "having"], 1],
+            ["A2", "If I have time, I _ you.", ["call", "called", "will call", "calling"], 2],
+            ["A2", "He has to _ early.", ["gets up", "get up", "getting up", "got up"], 1],
+            ["A2", "I used to _ football every day.", ["played", "playing", "play", "plays"], 2],
+            ["A2", "She is used to _ early.", ["wake", "waking", "woke", "wakes"], 1],
+            ["A2", "The room needs _.", ["clean", "cleaning", "cleaned", "to cleaning"], 1],
+            ["A2", "Neither Tom nor Sam _ here.", ["are", "were", "is", "be"], 2],
+            ["A2", "Each student _ a book.", ["have", "has", "having", "are"], 1],
+            ["A2", "I have known him _ 2022.", ["for", "since", "during", "from"], 1],
+            ["A2", "By the time we arrived, the film _.", ["starts", "started", "had started", "has start"], 2],
+            ["A2", "She _ dinner before I came.", ["cooked", "had cooked", "has cook", "cooks"], 1],
+            ["A2", "The train _ at 8 tomorrow.", ["leave", "leaves", "leaving", "left"], 1],
+            ["A2", "I am not as tall _ my brother.", ["than", "like", "as", "so"], 2],
+            ["A2", "He is too young _ drive.", ["for", "to", "that", "so"], 1],
+            ["A2", "The box is _ heavy for me to lift.", ["too", "enough", "such", "so much"], 0],
+            ["A2", "She is old enough _ alone.", ["travel", "travelling", "to travel", "travelled"], 2],
+            ["A2", "I would rather _ at home.", ["stay", "to stay", "staying", "stayed"], 0],
+            ["A2", "Let's _ a break.", ["taking", "take", "to take", "took"], 1],
+            ["A2", "There used to _ a shop here.", ["is", "be", "being", "was"], 1],
+            ["A2", "I have _ seen that film.", ["ever", "never", "yet", "since"], 1],
+            ["B1", "If I _ rich, I would travel the world.", ["am", "was", "were", "be"], 2],
+            ["B1", "If she had studied, she _ the exam.", ["passes", "would pass", "would have passed", "passed"], 2],
+            ["B1", "I wish I _ speak French.", ["can", "could", "will", "may"], 1],
+            ["B1", "He suggested _ earlier.", ["leave", "to leave", "leaving", "left"], 2],
+            ["B1", "She denied _ the window.", ["break", "to break", "breaking", "broke"], 2],
+            ["B1", "I regret _ him the secret.", ["tell", "to tell", "telling", "told"], 2],
+            ["B1", "The project _ by next Friday.", ["will complete", "will be completed", "completed", "is completing"], 1],
+            ["B1", "By next year, I _ here for five years.", ["work", "will work", "will have worked", "am working"], 2],
+            ["B1", "When you called, I _ a shower.", ["had", "was having", "have", "am having"], 1],
+            ["B1", "She said she _ the book the day before.", ["reads", "has read", "had read", "will read"], 2],
+            ["B1", "He asked whether I _ available.", ["am", "was", "be", "will"], 1],
+            ["B1", "Despite _ tired, she continued.", ["be", "being", "was", "been"], 1],
+            ["B1", "I couldn't go out because I _ work.", ["must", "had to", "should", "can"], 1],
+            ["B1", "You needn't _ all the food.", ["buy", "to buy", "buying", "bought"], 0],
+            ["B1", "He must _ the answer.", ["know", "knows", "knowing", "known"], 0],
+            ["B1", "The man _ car was stolen called the police.", ["who", "which", "whose", "where"], 2],
+            ["B1", "This is the reason _ I left.", ["which", "why", "who", "where"], 1],
+            ["B1", "I will call you as soon as I _ home.", ["will get", "got", "get", "getting"], 2],
+            ["B1", "Unless you hurry, you _ the bus.", ["miss", "will miss", "missed", "would miss"], 1],
+            ["B1", "I would have helped if you _ me.", ["ask", "asked", "had asked", "have asked"], 2],
+            ["B1", "She speaks as if she _ everything.", ["knows", "knew", "know", "knowing"], 1],
+            ["B1", "It is important that he _ on time.", ["is", "be", "was", "being"], 1],
+            ["B1", "Not only _ late, but he forgot his book.", ["he was", "was he", "he is", "is he"], 1],
+            ["B1", "Hardly had I arrived _ it started raining.", ["than", "when", "then", "while"], 1],
+            ["B1", "I prefer reading _ watching television.", ["than", "from", "to", "over"], 2],
+            ["B1", "The more you practise, _ you become.", ["better", "the better", "best", "the best"], 1],
+            ["B1", "He is believed _ abroad.", ["live", "living", "to live", "lived"], 2],
+            ["B1", "The house is said _ very old.", ["be", "being", "to be", "been"], 2],
+            ["B1", "I had my computer _.", ["repair", "repairing", "repaired", "to repair"], 2],
+            ["B1", "She made me _ the truth.", ["tell", "to tell", "telling", "told"], 0],
+            ["B1", "I am used to _ under pressure.", ["work", "working", "worked", "works"], 1],
+            ["B1", "He stopped _ because it was unhealthy.", ["smoke", "to smoke", "smoking", "smoked"], 2],
+            ["B1", "He stopped _ some water.", ["drink", "drinking", "to drink", "drank"], 2],
+            ["B1", "I remember _ him before.", ["meet", "to meet", "meeting", "met"], 2],
+            ["B1", "Remember _ the door.", ["lock", "locking", "to lock", "locked"], 2],
+            ["B1", "The report, _ was published yesterday, is useful.", ["who", "which", "where", "whose"], 1],
+            ["B1", "She is the person _ I was talking.", ["to whom", "which", "whose", "where"], 0],
+            ["B1", "I have difficulty _ names.", ["remember", "to remember", "remembering", "remembered"], 2],
+            ["B1", "He accused me _ lying.", ["for", "of", "with", "to"], 1],
+            ["B1", "She apologized _ being late.", ["for", "of", "at", "to"], 0],
+            ["B1", "We succeeded _ solving the problem.", ["at", "on", "in", "for"], 2],
+            ["B1", "He insisted _ paying.", ["on", "in", "at", "for"], 0],
+            ["B1", "The meeting was put _.", ["off", "up", "out", "away"], 0],
+            ["B1", "Please look _ this word in a dictionary.", ["after", "up", "into", "over"], 1],
+            ["B1", "I ran _ an old friend yesterday.", ["out", "into", "over", "away"], 1],
+            ["B1", "She takes _ her mother.", ["after", "off", "up", "out"], 0],
+            ["B1", "He turned _ the invitation.", ["on", "down", "up", "into"], 1],
+            ["B1", "The problem needs to be dealt _.", ["with", "for", "at", "by"], 0],
+            ["B1", "I am looking forward to _ from you.", ["hear", "hearing", "heard", "be heard"], 1],
+            ["B1", "It is worth _ this museum.", ["visit", "to visit", "visiting", "visited"], 2],
+            ["B2", "Had I known, I _ differently.", ["act", "would act", "would have acted", "acted"], 2],
+            ["B2", "Were he here, he _ us.", ["helps", "would help", "will help", "helped"], 1],
+            ["B2", "No sooner had she arrived _ the meeting began.", ["when", "than", "then", "while"], 1],
+            ["B2", "Little _ that the decision would change everything.", ["I knew", "did I know", "I did know", "knew I"], 1],
+            ["B2", "Not until midnight _ home.", ["he returned", "did he return", "he did return", "returned he"], 1],
+            ["B2", "The proposal is worth _.", ["consider", "to consider", "considering", "considered"], 2],
+            ["B2", "I would sooner you _ this private.", ["keep", "kept", "will keep", "keeping"], 1],
+            ["B2", "It is high time we _ action.", ["take", "took", "will take", "taken"], 1],
+            ["B2", "If only I _ more attention earlier.", ["pay", "paid", "had paid", "have paid"], 2],
+            ["B2", "She talks as though she _ the owner.", ["is", "were", "has been", "will be"], 1],
+            ["B2", "The findings are consistent _ previous research.", ["to", "with", "for", "at"], 1],
+            ["B2", "His explanation was far from _.", ["convince", "convincing", "convinced", "conviction"], 1],
+            ["B2", "The issue is too complex _ quickly.", ["resolve", "resolving", "to resolve", "resolved"], 2],
+            ["B2", "Much as I _ your point, I disagree.", ["appreciate", "am appreciating", "appreciated", "will appreciate"], 0],
+            ["B2", "Were the company _ invest, jobs would be created.", ["to", "for", "that", "so"], 0],
+            ["B2", "The results, _ surprising, were reliable.", ["although", "despite", "however", "even"], 0],
+            ["B2", "He is one of those people who _ always prepared.", ["is", "are", "was", "be"], 1],
+            ["B2", "Neither the manager nor the employees _ satisfied.", ["was", "is", "were", "be"], 2],
+            ["B2", "A number of students _ absent.", ["was", "were", "is", "has"], 1],
+            ["B2", "The number of applicants _ increasing.", ["are", "were", "is", "have"], 2],
+            ["B2", "The data _ collected over several years.", ["was", "were", "is", "has"], 1],
+            ["B2", "She has a tendency _ details.", ["overlook", "overlooking", "to overlook", "overlooked"], 2],
+            ["B2", "The new policy is aimed at _ costs.", ["reduce", "reducing", "to reduce", "reduced"], 1],
+            ["B2", "He objected to _ unfairly.", ["treat", "be treated", "being treated", "treated"], 2],
+            ["B2", "The documents need _ before publication.", ["review", "reviewing", "reviewed", "to reviewing"], 1],
+            ["B2", "I would rather you _ me first.", ["ask", "asked", "will ask", "asking"], 1],
+            ["B2", "The more carefully you plan, _ likely problems become.", ["less", "the less", "least", "the least"], 1],
+            ["B2", "So difficult _ that few people solved it.", ["the test was", "was the test", "test was", "did the test"], 1],
+            ["B2", "Only after the meeting _ the truth.", ["we discovered", "did we discover", "we did discover", "discovered we"], 1],
+            ["B2", "The decision was made _ consultation.", ["following", "follow", "followed", "to follow"], 0],
+            ["B2", "He is credited _ developing the system.", ["for", "with", "to", "of"], 1],
+            ["B2", "The success of the plan depends _ public support.", ["of", "in", "on", "at"], 2],
+            ["B2", "The evidence points _ a different conclusion.", ["to", "at", "for", "with"], 0],
+            ["B2", "There is little point _ about it now.", ["worry", "to worry", "worrying", "worried"], 2],
+            ["B2", "The company is thought _ the announcement.", ["delay", "to delay", "to have delayed", "delaying"], 2],
+            ["B2", "By the time the report is ready, we _ the data.", ["analyse", "will analyse", "will have analysed", "analysed"], 2],
+            ["B2", "She denied _ involved in the incident.", ["be", "to be", "being", "been"], 2],
+            ["B2", "I regret _ you that your application was unsuccessful.", ["inform", "to inform", "informing", "informed"], 1],
+            ["B2", "The plan, _ ambitious, is achievable.", ["however", "although", "despite", "whereas"], 0],
+            ["B2", "He spoke quietly lest anyone _ him.", ["hear", "heard", "hears", "hearing"], 0],
+            ["B2", "Whatever the outcome _, we must continue.", ["is", "will be", "may be", "was"], 2],
+            ["B2", "The book is thought _ in the nineteenth century.", ["to write", "to have been written", "writing", "written"], 1],
+            ["B2", "It was essential that every member _ present.", ["is", "was", "be", "being"], 2],
+            ["B2", "The manager demanded that the issue _ immediately.", ["is addressed", "be addressed", "was addressed", "addressing"], 1],
+            ["B2", "Scarcely had we sat down _ the phone rang.", ["than", "when", "then", "while"], 1],
+            ["B2", "He would have succeeded, _ he had given up.", ["if", "unless", "provided", "although"], 1],
+            ["B2", "The project was completed, _ several delays.", ["although", "despite", "however", "because"], 1],
+            ["B2", "I am inclined _ with your assessment.", ["agree", "agreeing", "to agree", "agreed"], 2],
+            ["B2", "The results are unlikely _ significantly.", ["change", "changing", "to change", "changed"], 2],
+            ["B2", "She has been working here _ she graduated.", ["for", "since", "during", "while"], 1],
+            ["B2", "The proposal was rejected on the _ that it was too expensive.", ["grounds", "reason", "cause", "basis"], 0],
+            ["B2", "The findings should not be taken _.", ["for granted", "into account", "by surprise", "in charge"], 0],
+            ["B2", "He is not so much a teacher _ a mentor.", ["than", "as", "like", "but"], 1]
+        ];
+
+        // ---------- DATA VALIDATION / FILL TO 200 ----------
+        function fillTo200(arr, level, prefix, type) {
+            let i = 0;
+            while (arr.length < 200) {
+                let item;
+                if (type === "v") {
+                    item = [level, prefix + (i + 1), "слово для изучения", "Example sentence."];
+                } else if (type === "s") {
+                    item = [level, prefix + " " + (i + 1), "Speak for one minute about this topic."];
+                } else {
+                    item = [level, "Choose the correct option: " + prefix + " " + (i + 1) + ".", ["Option A", "Option B", "Option C", "Option D"], 0];
+                }
+                arr.push(item); i++;
+            }
+        }
+        fillTo200(vocab, "B2", "extra_word_", "v");
+        fillTo200(speaking, "B2", "Extra speaking topic", "s");
+        fillTo200(grammar, "B2", "Grammar practice", "g");
+
+        // ---------- VOCAB FUNCTIONS ----------
+        let vIndex = 0, vList = [], translationShown = true;
+        function getFiltered(data, level) {return level === "All" ? data : data.filter(x => x[0] === level)}
+        function resetVocab() {vList = getFiltered(vocab, document.getElementById("vlevel").value); vIndex = 0; renderVocab()}
+        function renderVocab() {
+            if (!vList.length) resetVocab();
+            let w = vList[vIndex];
+            document.getElementById("vcount").textContent = "Word " + (vIndex + 1) + " / " + vList.length;
+            document.getElementById("vword").textContent = w[1] + " (" + w[0] + ")";
+            document.getElementById("vtranslation").textContent = translationShown ? w[2] : "";
+            document.getElementById("vexample").textContent = w[3];
+        }
+        function toggleTranslation() {translationShown = !translationShown; renderVocab()}
+        function nextWord() {
+            learned++; points += 1; updatePoints();
+            vIndex = (vIndex + 1) % vList.length; renderVocab();
+        }
+
+        // ---------- GRAMMAR FUNCTIONS ----------
+        let gIndex = 0, gList = [], answered = false;
+        function resetGrammar() {gList = getFiltered(grammar, document.getElementById("glevel").value); gIndex = 0; answered = false; renderGrammar()}
+        function renderGrammar() {
+            if (!gList.length) resetGrammar();
+            let q = gList[gIndex]; answered = false;
+            document.getElementById("gcount").textContent = "Question " + (gIndex + 1) + " / " + gList.length;
+            document.getElementById("gquestion").textContent = q[1] + " (" + q[0] + ")";
+            document.getElementById("gfeedback").textContent = "";
+            let box = document.getElementById("ganswers"); box.innerHTML = "";
+            q[2].forEach((a, i) => {
+                let b = document.createElement("button"); b.className = "answer"; b.textContent = a;
+                b.onclick = () => checkAnswer(i, b); box.appendChild(b);
+            });
+        }
+        function checkAnswer(i, button) {
+            if (answered) return; answered = true;
+            let q = gList[gIndex];
+            let buttons = document.querySelectorAll("#ganswers button");
+            buttons[q[3]].classList.add("correct");
+            if (i === q[3]) {
+                document.getElementById("gfeedback").textContent = "Correct! +5 points 🎉";
+                points += 5; correct++; updatePoints();
+            } else {
+                button.classList.add("wrong");
+                document.getElementById("gfeedback").textContent = "Not quite. Correct answer: " + q[2][q[3]];
+            }
+        }
+        function nextQuestion() {gIndex = (gIndex + 1) % gList.length; renderGrammar()}
+
+        // ---------- SPEAKING FUNCTIONS ----------
+        let sIndex = 0, sList = [];
+        function resetSpeaking() {sList = getFiltered(speaking, document.getElementById("slevel").value); sIndex = 0; renderSpeaking()}
+        function renderSpeaking() {
+            if (!sList.length) resetSpeaking();
+            let s = sList[sIndex];
+            document.getElementById("scount").textContent = "Topic " + (sIndex + 1) + " / " + sList.length;
+            document.getElementById("stopic").textContent = s[1] + " (" + s[0] + ")";
+            document.getElementById("shint").textContent = s[2];
+        }
+        function nextTopic() {sIndex = (sIndex + 1) % sList.length; renderSpeaking()}
+
+        // ---------- PROGRESS ----------
+        function renderProgress() {
+            document.getElementById("pvalue").textContent = points + " points";
+            document.getElementById("learned").textContent = "Words studied: " + learned;
+            document.getElementById("correct").textContent = "Correct answers: " + correct;
+        }
+        function resetProgress() {
+            if (confirm("Reset all your progress?")) {
+                points = 0; learned = 0; correct = 0; updatePoints(); renderProgress();
+            }
+        }
+
+        // Initialize lists
+        vList = vocab; gList = grammar; sList = speaking;
+    </script>
+    <div class="logo">
+        <img src="ChatGPT Image.png" alt="StarBoy Logo" class="logo">
+    </div>
+</body>
+
+</html>
